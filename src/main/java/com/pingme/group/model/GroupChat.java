@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pingme.file.FileContent;
 import com.pingme.message.model.Message;
 import com.pingme.user.model.User;
 
@@ -39,6 +40,12 @@ public class GroupChat {
 	@JsonIgnore
 	@OneToMany(mappedBy = "groupChat")
 	private List<Message> messages = new ArrayList<>();
+	
+	@JsonIgnore
+	@OneToMany(mappedBy = "groupChatfile")
+	private List<FileContent> file = new ArrayList<>();
+	
+	
 	
 
 }

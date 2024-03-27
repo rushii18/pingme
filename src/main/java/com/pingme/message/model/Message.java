@@ -1,8 +1,14 @@
 package com.pingme.message.model;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
+import org.springframework.web.multipart.MultipartFile;
+
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.pingme.chat.model.Chat;
+import com.pingme.file.FileContent;
 import com.pingme.group.model.GroupChat;
 import com.pingme.user.model.User;
 
@@ -29,8 +35,7 @@ public class Message {
 	private Integer id;
 
 	private String textMessage;
-	private String image;
-	private String file;
+
 	private String video;
 	private String recivedUserName;
 
@@ -39,10 +44,8 @@ public class Message {
 	private User user;
 	@ManyToOne
 	private Chat chat;
-	
+
 	@ManyToOne
 	private GroupChat groupChat;
-
-	
 
 }

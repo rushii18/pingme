@@ -17,5 +17,7 @@ public interface GroupChatRepository extends JpaRepository<GroupChat, Integer> {
 	public List<User> findByUsers(User users);
 
 	public List<GroupChat> findByGroupName(String groupName);
+	
+ 
 
 }

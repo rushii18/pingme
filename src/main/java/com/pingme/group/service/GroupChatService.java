@@ -18,6 +18,8 @@ public interface GroupChatService {
 	
 	public List<GroupChat> findByGroupChatName(GroupChat groupChat);
 	
+	public GroupChat findByGroupName(String groupName);
+	
 	
 
 }

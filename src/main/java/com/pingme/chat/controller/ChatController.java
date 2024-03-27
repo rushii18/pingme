@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.pingme.chat.model.Chat;
@@ -45,8 +47,8 @@ public class ChatController {
 	}
 
 	@GetMapping("/getchatname")
-	public List<Chat> chatByChatName( @RequestBody Chat chat) {
-		
+	public List<Chat> chatByChatName(@RequestBody Chat chat) {
+
 		List<Chat> chatName = chatService.findBychatname(chat.getChatName());
 
 		return chatName;
@@ -55,7 +57,7 @@ public class ChatController {
 
 	@GetMapping("/getcontact")
 	public List<Chat> chatByContact(@RequestBody Chat chat) {
-		
+
 		List<Chat> chatcontact = chatService.findBychatcontact(chat.getContact());
 
 		return chatcontact;

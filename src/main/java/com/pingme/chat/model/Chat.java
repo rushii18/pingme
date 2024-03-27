@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.pingme.file.FileContent;
 import com.pingme.message.model.Message;
 import com.pingme.user.model.User;
 
@@ -42,5 +43,8 @@ public class Chat {
 	@JsonIgnore
 	@OneToMany(mappedBy = "chat")
 	private List<Message> message = new ArrayList<>();
+	
+	@OneToMany
+	private List<FileContent> files = new ArrayList<>();
 
 }

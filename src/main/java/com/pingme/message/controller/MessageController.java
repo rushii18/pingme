@@ -7,10 +7,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.pingme.chat.model.Chat;
 import com.pingme.chat.service.ChatService;
+import com.pingme.file.FileContent;
 import com.pingme.group.model.GroupChat;
 import com.pingme.group.service.GroupChatService;
 import com.pingme.message.model.Message;
@@ -29,7 +32,7 @@ public class MessageController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping("/message/{chatid}")
+	@PostMapping(value = "/message/{chatid}", consumes = { "multipart/form-data" })
 	public Message sendMessage(@RequestBody Message message, @PathVariable Integer chatid) throws Exception {
 
 		Chat chat = chatService.findByid(chatid);

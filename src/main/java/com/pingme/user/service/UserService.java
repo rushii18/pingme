@@ -13,12 +13,14 @@ public interface UserService {
 
 	public Authreponce loginUser(String email, String password) throws Exception;
 
-	public List<User> searchByfirstname(String firstName);
+	public User searchByfirstname(String firstName);
 
-	public List<User> searchByContact(String conatact);
+	public User searchByContact(String conatact);
 
 	public User findUserByid(Integer id) throws Exception;
 	
 	public List<User> getAllUser();
+	
+	public User findUserfromJwt(String jwt);
 	
 }

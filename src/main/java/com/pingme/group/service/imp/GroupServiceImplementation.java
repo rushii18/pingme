@@ -3,6 +3,7 @@ package com.pingme.group.service.imp;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 import javax.swing.text.GapContent;
 
@@ -84,6 +85,17 @@ public class GroupServiceImplementation implements GroupChatService {
 		List<GroupChat> gc = groupChatRepository.findByGroupName(groupChat.getGroupName());
 
 		return gc;
+	}
+
+	@Override
+	public GroupChat findByGroupName(String groupName) {
+		List<GroupChat> groupName1 = groupChatRepository.findByGroupName(groupName);
+		
+	       GroupChat gc = (GroupChat) groupName1.stream().filter(x->x.getGroupName().equals(groupName)).collect(Collectors.toList());
+	       
+	       System.out.println(gc);
+		
+		return gc ;
 	}
 
 }

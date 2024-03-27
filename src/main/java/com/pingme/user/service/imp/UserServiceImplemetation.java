@@ -3,6 +3,8 @@ package com.pingme.user.service.imp;
 import java.util.List;
 import java.util.Optional;
 
+
+import com.pingme.config.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,7 +12,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.pingme.responce.Authreponce;
-import com.pingme.user.configuration.jwtservice.JwtService;
+
 import com.pingme.user.model.Role;
 import com.pingme.user.model.User;
 import com.pingme.user.repository.UserRepository;
@@ -22,36 +24,37 @@ public class UserServiceImplemetation implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-	@Autowired
-	private PasswordEncoder passwordEncoder;
 
-	@Autowired
+    @Autowired
 	private JwtService jwtService;
-
 	@Autowired
-	private UserDetailsService userDetailsService;
+	public   PasswordEncoder passwordEncoder;
 
-	public Authreponce createPingmeAccout(User user) throws Exception {
+     @Autowired
+	private  UserDetailsService userDetailsService;
 
-		Optional<User> userpresent = userRepository.findByEmail(user.getEmail());
 
-		if (userpresent.get() != null) {
+
+    public Authreponce createPingmeAccout(User user) throws Exception {
+
+
+		 Optional<User> userpresent = userRepository.findByEmail(user.getEmail());
+
+		if (userpresent.isPresent()) {
 			throw new Exception("this user is alreay exist");
 		}
 		User createUser = new User();
 		createUser.setFirstName(user.getFirstName());
 		createUser.setLastName(user.getLastName());
 		createUser.setEmail(user.getEmail());
-		createUser.setPassword(passwordEncoder.encode(user.getPassword()));
+		createUser.setPassword(user.getPassword());
 		createUser.setGender(user.getGender());
 		createUser.setContact(user.getContact());
-		createUser.setRole(Role.ADMIN);
+		// createUser.setRole(Role.admin);
 
 		User saveUser = userRepository.save(createUser);
 
-		String token = jwtService.generateJwt(saveUser);
-
-		Authreponce auth = new Authreponce(token, "Accout Create");
+		Authreponce auth = new Authreponce(null, "Accout Create");
 
 		return auth;
 	}
@@ -60,6 +63,8 @@ public class UserServiceImplemetation implements UserService {
 	public User updateUser(User user, Integer userid) throws Exception {
 
 		Optional<User> userupdat = userRepository.findById(userid);
+
+		System.out.println(userupdat);
 
 		if (userupdat.isPresent()) {
 			User userUpdate = userupdat.get();
@@ -77,9 +82,6 @@ public class UserServiceImplemetation implements UserService {
 			if (user.getContact() != null) {
 				userUpdate.setContact(user.getContact());
 			}
-			if (user.getPassword() != null) {
-				userUpdate.setPassword(user.getPassword());
-			}
 
 			User userupdateall = userRepository.save(userUpdate);
 			return userupdateall;
@@ -89,7 +91,7 @@ public class UserServiceImplemetation implements UserService {
 
 	@Override
 	public Authreponce loginUser(String email, String password) throws Exception {
-		System.out.println(email);
+
 		UserDetails userDetails = userDetailsService.loadUserByUsername(email);
 
 		if (email == userDetails.getUsername()) {
@@ -102,23 +104,27 @@ public class UserServiceImplemetation implements UserService {
 			throw new Exception("password is wrong");
 		}
 
-		String token = jwtService.generateJwt(userDetails);
+		 String token = jwtService.generateToken(userDetails);
 
-		Authreponce auth = new Authreponce(token, "Login Sucssefull");
+		Authreponce auth = new Authreponce("login Success", token);
 		return auth;
 
 	}
 
 	@Override
-	public List<User> searchByfirstname(String firstName) {
-		// TODO Auto-generated method stub
-		return null;
+	public User searchByfirstname(String firstName) {
+
+		User userSortByName = userRepository.findByfirstName(firstName);
+
+		return userSortByName;
 	}
 
 	@Override
-	public List<User> searchByContact(String conatact) {
-		// TODO Auto-generated method stub
-		return null;
+	public User searchByContact(String conatact) {
+
+		User userSortByContact = userRepository.findBycontact(conatact);
+
+		return userSortByContact;
 	}
 
 	@Override
@@ -141,5 +147,13 @@ public class UserServiceImplemetation implements UserService {
 
 		return getAllUsers;
 	}
+
+	public User findUserfromJwt(String jwt) {
+        String name= jwtService.extractUsername(jwt);
+		Optional<User> jwtUser = userRepository.findByEmail(name);
+		return jwtUser.get();
+	}
+
+
 
 }

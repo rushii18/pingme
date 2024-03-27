@@ -1,12 +1,14 @@
 package com.pingme.user.model;
 
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
+import org.springframework.security.web.server.header.CacheControlServerHttpHeadersWriter;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "users")
-public class User implements UserDetails {
+public class User implements UserDetails  {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -38,18 +40,23 @@ public class User implements UserDetails {
 	private String contact;
 	private String password;
 
-	
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
+		// TODO Auto-generated method stub
 		return List.of(new SimpleGrantedAuthority(role.name()));
 	}
 
 	@Override
-	public String getUsername() {
+	public String getPassword() {
+		return password;
+	}
 
+	@Override
+	public String getUsername() {
+		// TODO Auto-generated method stub
 		return email;
 	}
 
@@ -77,9 +84,4 @@ public class User implements UserDetails {
 		return true;
 	}
 
-	@Override
-	public String getPassword() {
-		// TODO Auto-generated method stub
-		return password;
 	}
-}
