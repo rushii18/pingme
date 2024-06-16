@@ -15,6 +15,7 @@ import com.pingme.chat.model.Chat;
 import com.pingme.chat.request.ChatRequest;
 import com.pingme.chat.service.ChatService;
 import com.pingme.user.model.User;
+import com.pingme.user.repository.UserRepository;
 import com.pingme.user.service.UserService;
 
 @RestController
@@ -24,38 +25,56 @@ public class ChatController {
 	private UserService userService;
 
 	@Autowired
+	private UserRepository userRepository;
+	@Autowired
 	private ChatService chatService;
 
-	@PostMapping("/chat/{user}")
-	public Chat createChat(@PathVariable Integer user, @RequestBody ChatRequest chatRequestid) throws Exception {
+	@PostMapping("/api/chat/create")
+	public Chat createChat(@RequestHeader("Authorization") String jwt, @RequestBody ChatRequest chatRequest)
+			throws Exception {
+		User user = userService.findUserfromJwt(jwt);
 
-		User requser1 = userService.findUserByid(chatRequestid.getUserid());
+		User requser1 = userService.searchByfirstname(chatRequest.getFirstName());
 
-		User reqUser2 = userService.findUserByid(user);
-
-		Chat createchat = chatService.createChatByContactandfirstname(requser1, reqUser2);
+		Chat createchat = chatService.createChatByContactandfirstname(requser1, user);
 
 		return createchat;
 	}
 
-	@GetMapping("/getallchat")
-	public List<Chat> allChat() {
-		List<Chat> chatall = chatService.getAllchatid();
+	@GetMapping("/api/getallchat")
+	public List<Chat> allChat(@RequestHeader("Authorization") String jwt) {
+		User user = userService.findUserfromJwt(jwt);
+
+		List<Chat> chatall = chatService.getAllchatid(user.getId());
 
 		return chatall;
 
 	}
 
-	@GetMapping("/getchatname")
-	public List<Chat> chatByChatName(@RequestBody Chat chat) {
+//	@GetMapping("/getchatname")
+//	public List<Chat> chatByChatName( @RequestHeader("Authorization") String jwt, @RequestBody ChatRequest chat  ) {
+//
+//		User userList = userService.findUserfromJwt(jwt);
+//		
+//
+//		
+//		List<Chat> chatName =chatService.findBychatname(chat.getFirstName());
+//
+//		return chatName;
+//
+//	}
+	@GetMapping("/api/getchatname")
+	public Chat chatByChatName(@RequestHeader("Authorization") String jwt, @RequestBody ChatRequest chat) {
 
-		List<Chat> chatName = chatService.findBychatname(chat.getChatName());
+		User userList = userService.findUserfromJwt(jwt);
+
+		Chat chatName = chatService.findBychatname(chat.getFirstName());
 
 		return chatName;
 
 	}
 
-	@GetMapping("/getcontact")
+	@GetMapping("/api/getcontact")
 	public List<Chat> chatByContact(@RequestBody Chat chat) {
 
 		List<Chat> chatcontact = chatService.findBychatcontact(chat.getContact());

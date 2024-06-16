@@ -27,7 +27,7 @@ import lombok.NoArgsConstructor;
 @Data
 @Entity
 @Table(name = "users")
-public class User implements UserDetails  {
+public class User implements UserDetails {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -47,6 +47,7 @@ public class User implements UserDetails  {
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		// TODO Auto-generated method stub
 		return List.of(new SimpleGrantedAuthority(role.name()));
+		
 	}
 
 	@Override
@@ -84,4 +85,4 @@ public class User implements UserDetails  {
 		return true;
 	}
 
-	}
+}

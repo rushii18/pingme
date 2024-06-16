@@ -10,6 +10,7 @@ import javax.swing.text.GapContent;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.pingme.group.grouprequest.GroupRequest;
 import com.pingme.group.model.GroupChat;
 
 import com.pingme.group.repository.GroupChatRepository;
@@ -27,17 +28,23 @@ public class GroupServiceImplementation implements GroupChatService {
 	private UserService userService;
 
 	@Override
-	public GroupChat createGroupUser(GroupChat groupChat, User usersAdd) {
+	public GroupChat createGroupUser(GroupChat groupChat, User usersAdd) throws Exception {
 
-		GroupChat groupChatCreate = new GroupChat();
+		Optional<GroupChat> gp = groupChatRepository.findByGroupName(groupChat.getGroupName());
 
-		groupChatCreate.setGroupName(groupChat.getGroupName());
-		groupChatCreate.setGroupImage(groupChat.getGroupImage());
-		groupChatCreate.getUsers().add(usersAdd);
+		if (gp.isPresent()) {
+			throw new Exception("group alredy exist");
+			// return gp.get();
+		} else {
+			GroupChat groupChatCreate = new GroupChat();
 
-		GroupChat savegrGroupChat = groupChatRepository.save(groupChatCreate);
+			groupChatCreate.setGroupName(groupChat.getGroupName());
+			groupChatCreate.setGroupImage(groupChat.getGroupImage());
+			groupChatCreate.getUsers().add(usersAdd);
 
-		return savegrGroupChat;
+			return groupChatCreate = groupChatRepository.save(groupChatCreate);
+		}
+
 	}
 
 	@Override
@@ -63,15 +70,17 @@ public class GroupServiceImplementation implements GroupChatService {
 	}
 
 	@Override
-	public GroupChat addUserinGroup(User user, GroupChat groupChat) throws Exception {
+	public GroupChat addUserinGroup(GroupChat groupChat, User user) throws Exception {
 
-		GroupChat adduser = findByGroupId(groupChat.getId());
+		GroupChat adduser = findByGroupName(groupChat.getGroupName());
 
-		if (adduser.getUsers().contains(user)) {
+		User userName = userService.searchByfirstname(user.getFirstName());
+
+		if (adduser.getUsers().contains(userName)) {
 			throw new Exception("this user is already add in group  " + groupChat.getGroupName());
 		}
 
-		adduser.getUsers().add(user);
+		adduser.getUsers().add(userName);
 
 		GroupChat savegroup = groupChatRepository.save(adduser);
 
@@ -80,22 +89,43 @@ public class GroupServiceImplementation implements GroupChatService {
 	}
 
 	@Override
-	public List<GroupChat> findByGroupChatName(GroupChat groupChat) {
+	public List<GroupChat> findByGroupChatName(String groupChat) {
 
-		List<GroupChat> gc = groupChatRepository.findByGroupName(groupChat.getGroupName());
+		List<GroupChat> gc = groupChatRepository.searchByGroupName(groupChat);
 
 		return gc;
 	}
 
 	@Override
 	public GroupChat findByGroupName(String groupName) {
-		List<GroupChat> groupName1 = groupChatRepository.findByGroupName(groupName);
-		
-	       GroupChat gc = (GroupChat) groupName1.stream().filter(x->x.getGroupName().equals(groupName)).collect(Collectors.toList());
-	       
-	       System.out.println(gc);
-		
-		return gc ;
+
+		Optional<GroupChat> gc = groupChatRepository.findByGroupName(groupName);
+
+		return gc.get();
+	}
+
+	@Override
+	public List<GroupChat> getAllgroups() {
+		List<GroupChat> lg = groupChatRepository.findAll();
+
+		return lg;
+	}
+
+	@Override
+	public List<GroupChat> getAllGroupByUser(User user) {
+
+		List<GroupChat> lg = groupChatRepository.findByUsers(user);
+		return lg;
+	}
+
+	@Override
+	public GroupChat searchByGroupName(String name) throws Exception {
+		Optional<GroupChat> gc = groupChatRepository.findByGroupName(name);
+		if(gc.isEmpty()) {
+			throw new Exception("this Group in not Present " + name);
+		}
+
+		return gc.get();
 	}
 
 }

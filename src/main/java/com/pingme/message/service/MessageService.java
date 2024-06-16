@@ -12,12 +12,20 @@ import com.pingme.user.model.User;
 
 public interface MessageService {
 
-	public Message sendMessageOneToOne(User revicedUser, Message message);
+	public Message sendMessageOneToOne(Chat chat, Message message , User senduser );
+	
+	public List<Message> sendMessageOnetoOneList(Integer chatid , List<Message> message, User sendUser );
+	
+	public Message senMessage(Chat chat, Message message , User user , MultipartFile file );
 
-	public Message senMessage(Chat chat, Message message  );
-
-	public Message sendMessageGroup(GroupChat groupChat, Message message);
+	public Message sendMessageGroup(GroupChat groupChat, Message message , User user );
 	
 	public Message groupMessage(Integer groupid , Message message );
+	
+	public List<Message> getAllmessgae(Integer chatid);
+	
+	public List<Message> getAllgroupMessgae(Integer groupid);
+	
 
+	 
 }

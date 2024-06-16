@@ -14,11 +14,13 @@ public interface ChatRepository extends JpaRepository<Chat, Integer> {
 	@Query("select c from Chat c where :user Member of c.users And :reqUser Member of c.users")
 	public Chat findChatByUsersId(@Param("user") User user, @Param("reqUser") User reqUser);
 
-	public List<Chat> findChatBychatName(String chatName);
+	public Chat findChatBychatName(String chatName);
 	
-	public List<Chat> findChatBycontact(String contact);
+	public Chat findChatBycontact(String contact);
 	
 	public List<Chat> findByUsersId(Integer chaid);
 
 	public Chat findByChatName(String chatName);
+	
+	public List<Chat> findByUsersFirstName(String fistaName);
 }

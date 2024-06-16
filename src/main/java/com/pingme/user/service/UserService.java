@@ -9,18 +9,20 @@ public interface UserService {
 
 	public Authreponce createPingmeAccout(User user) throws Exception;
 
-	public User updateUser(User user , Integer userid) throws Exception;
+	public User updateUser(User user, Integer userid) throws Exception;
 
 	public Authreponce loginUser(String email, String password) throws Exception;
 
 	public User searchByfirstname(String firstName);
+	
+	public List<User> findByUserName(String firstName); 
 
 	public User searchByContact(String conatact);
 
 	public User findUserByid(Integer id) throws Exception;
-	
-	public List<User> getAllUser();
-	
+
+	public List<User> getUserByName(String name);
+
 	public User findUserfromJwt(String jwt);
-	
+
 }

@@ -30,9 +30,10 @@ public class FileContent {
 	private String fileContent;
 	private Long fileSize;
 
+
 	@ManyToOne
 	private Chat chat;
-	
-	@ManyToOne	
+
+	@ManyToOne
 	private GroupChat groupChatfile;
 }

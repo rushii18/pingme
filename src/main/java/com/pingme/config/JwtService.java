@@ -1,26 +1,28 @@
 package com.pingme.config;
 
-import com.pingme.user.service.UserService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
-import jakarta.websocket.Decoder;
+
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import java.security.Key;
-import java.util.Base64;
+
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Function;
 
+import javax.crypto.SecretKey;
+
 @Service
 public class JwtService {
 
-	final String SECRET_KEY = "dvbvhfchfvhegvsbjryferrf643744r476t4r64tyd3tdr63r67r4fe2763r";
+	final static String SECRET_KEY = "9C4183A2D29A1A1BA4645159A5DB2jnfusegfsehjffsfsvgyef";
+	final static String TOKEN_HEADER = "Authorization";
 
 	public String extractUsername(String jwt) {
 		return extractClaim(jwt, Claims::getSubject);
@@ -48,17 +50,16 @@ public class JwtService {
 	public String generateToken(Map<String, Object> extraClaims, UserDetails userDetails) {
 		return Jwts.builder().setClaims(extraClaims).setSubject(userDetails.getUsername())
 				.setIssuedAt(new Date(System.currentTimeMillis())).setIssuer(userDetails.getUsername())
-				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 24))
-				.signWith(getSignInkey(), SignatureAlgorithm.HS256).compact();
+				.setExpiration(new Date(System.currentTimeMillis() + 1000 * 60 * 240 )).signWith(getSignInkey())
+				.compact();
 	}
 
-	public Claims extractAllclaims(String jwt) {
-
-		return Jwts.parserBuilder().setSigningKey(getSignInkey()).build().parseClaimsJwt(jwt).getBody();
+	public Claims extractAllClaims(String jwt) {
+		return Jwts.parserBuilder().setSigningKey(getSignInkey()).build().parseClaimsJws(jwt).getBody();
 	}
 
 	public <T> T extractClaim(String jwt, Function<Claims, T> claimResolver) {
-		final Claims claims = extractAllclaims(jwt);
+		final Claims claims = extractAllClaims(jwt);
 		return claimResolver.apply(claims);
 	}
 

@@ -35,16 +35,25 @@ public class Message {
 	private Integer id;
 
 	private String textMessage;
-
 	private String video;
-	private String recivedUserName;
-
+    private String image;
 	private LocalDateTime timeStamp;
+	private Integer chatid;
+	private Integer groupid;
+	private String senderUser;
+
+	@JsonIgnore
 	@ManyToOne
 	private User user;
+
+	@ManyToOne
+	private FileContent fileContent;
+
+	@JsonIgnore
 	@ManyToOne
 	private Chat chat;
 
+	@JsonIgnore
 	@ManyToOne
 	private GroupChat groupChat;
 

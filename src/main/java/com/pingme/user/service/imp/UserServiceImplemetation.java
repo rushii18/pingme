@@ -3,7 +3,6 @@ package com.pingme.user.service.imp;
 import java.util.List;
 import java.util.Optional;
 
-
 import com.pingme.config.JwtService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -24,21 +23,17 @@ public class UserServiceImplemetation implements UserService {
 	@Autowired
 	private UserRepository userRepository;
 
-
-    @Autowired
+	@Autowired
 	private JwtService jwtService;
 	@Autowired
-	public   PasswordEncoder passwordEncoder;
+	public PasswordEncoder passwordEncoder;
 
-     @Autowired
-	private  UserDetailsService userDetailsService;
+	@Autowired
+	private UserDetailsService userDetailsService;
 
+	public Authreponce createPingmeAccout(User user) throws Exception {
 
-
-    public Authreponce createPingmeAccout(User user) throws Exception {
-
-
-		 Optional<User> userpresent = userRepository.findByEmail(user.getEmail());
+		Optional<User> userpresent = userRepository.findByEmail(user.getEmail());
 
 		if (userpresent.isPresent()) {
 			throw new Exception("this user is alreay exist");
@@ -47,14 +42,15 @@ public class UserServiceImplemetation implements UserService {
 		createUser.setFirstName(user.getFirstName());
 		createUser.setLastName(user.getLastName());
 		createUser.setEmail(user.getEmail());
-		createUser.setPassword(user.getPassword());
+		createUser.setPassword(passwordEncoder.encode(user.getPassword()));
 		createUser.setGender(user.getGender());
 		createUser.setContact(user.getContact());
-		// createUser.setRole(Role.admin);
+		createUser.setRole(Role.USER);
 
 		User saveUser = userRepository.save(createUser);
+		String token = jwtService.generateToken(saveUser);
 
-		Authreponce auth = new Authreponce(null, "Accout Create");
+		Authreponce auth = new Authreponce("Account Create", token);
 
 		return auth;
 	}
@@ -63,8 +59,6 @@ public class UserServiceImplemetation implements UserService {
 	public User updateUser(User user, Integer userid) throws Exception {
 
 		Optional<User> userupdat = userRepository.findById(userid);
-
-		System.out.println(userupdat);
 
 		if (userupdat.isPresent()) {
 			User userUpdate = userupdat.get();
@@ -104,7 +98,7 @@ public class UserServiceImplemetation implements UserService {
 			throw new Exception("password is wrong");
 		}
 
-		 String token = jwtService.generateToken(userDetails);
+		String token = jwtService.generateToken(userDetails);
 
 		Authreponce auth = new Authreponce("login Success", token);
 		return auth;
@@ -141,19 +135,28 @@ public class UserServiceImplemetation implements UserService {
 	}
 
 	@Override
-	public List<User> getAllUser() {
+	public List<User> getUserByName(String name) {
 
-		List<User> getAllUsers = userRepository.findAll();
+		List<User> getAllUsers = userRepository.searchByUser(name);
 
 		return getAllUsers;
 	}
 
 	public User findUserfromJwt(String jwt) {
-        String name= jwtService.extractUsername(jwt);
-		Optional<User> jwtUser = userRepository.findByEmail(name);
+
+		String newJwt = jwt.substring(7);
+
+		String email = jwtService.extractUsername(newJwt);
+
+		Optional<User> jwtUser = userRepository.findByEmail(email);
+
 		return jwtUser.get();
 	}
 
+	@Override
+	public List<User> findByUserName(String firstName) {
 
+		return this.userRepository.searchByUser(firstName);
+	}
 
 }

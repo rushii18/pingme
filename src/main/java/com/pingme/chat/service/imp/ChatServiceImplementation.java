@@ -10,6 +10,8 @@ import org.springframework.stereotype.Service;
 import com.pingme.chat.model.Chat;
 import com.pingme.chat.repo.ChatRepository;
 import com.pingme.chat.service.ChatService;
+import com.pingme.file.FileContent;
+import com.pingme.file.repo.FileRepository;
 import com.pingme.user.model.User;
 import com.pingme.user.service.UserService;
 
@@ -21,6 +23,9 @@ public class ChatServiceImplementation implements ChatService {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private FileRepository fileRepository;
 
 	@Override
 	public String deleteChat(Integer chatid) {
@@ -56,7 +61,6 @@ public class ChatServiceImplementation implements ChatService {
 
 		Chat chatcreate = new Chat();
 
-		chatcreate.setChatName(reqUser.getFirstName());
 		chatcreate.setContact(reqUser.getContact());
 		chatcreate.setTimeStamp(LocalDate.now());
 
@@ -70,25 +74,35 @@ public class ChatServiceImplementation implements ChatService {
 	}
 
 	@Override
-	public List<Chat> getAllchatid() {
-		List<Chat> allchat = chatRepository.findAll();
+	public List<Chat> getAllchatid(Integer userid) {
+
+		List<Chat> allchat = chatRepository.findByUsersId(userid);
+
 		return allchat;
 	}
 
 	@Override
-	public List<Chat> findBychatname(String chatname) {
-	
-		List<Chat> chat = chatRepository.findChatBychatName(chatname);
-		
+	public Chat findBychatname(String chatname) {
+
+		Chat chat = chatRepository.findChatBychatName(chatname);
+
 		return chat;
 	}
 
 	@Override
 	public List<Chat> findBychatcontact(String contact) {
-	
+
 		List<Chat> chatcontct = findBychatcontact(contact);
-		
+
 		return chatcontct;
+	}
+
+	@Override
+	public String deletAllfile(List<FileContent> list) {
+
+		fileRepository.deleteAll(list);
+
+		return "Done";
 	}
 
 }

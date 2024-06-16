@@ -9,10 +9,10 @@ import com.pingme.file.FileContent;
 
 public interface FileService {
 
-	public List<FileContent> sendFileUser(MultipartFile file, Integer chatid) throws Exception;
+	public List<FileContent> sendFileUser(MultipartFile file,String filename) throws Exception;
 
 	public List<FileContent> getFileByUser();
 	
-	public FileContent sendFilestoGroup(MultipartFile file , Integer integer) throws Exception;
+	public FileContent sendFilestoGroup(MultipartFile file , String integer) throws Exception;
 
 }

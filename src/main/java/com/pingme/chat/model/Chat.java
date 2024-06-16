@@ -32,7 +32,6 @@ public class Chat {
 	private Integer id;
 
 	private String chatName;
-
 	private String contact;
 
 	private LocalDate timeStamp;
@@ -40,7 +39,7 @@ public class Chat {
 	@ManyToMany
 	private List<User> users = new ArrayList<User>();
 
-	@JsonIgnore
+	
 	@OneToMany(mappedBy = "chat")
 	private List<Message> message = new ArrayList<>();
 	

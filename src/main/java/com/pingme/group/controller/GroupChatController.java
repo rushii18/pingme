@@ -7,12 +7,15 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.pingme.group.grouprequest.GroupRequest;
 import com.pingme.group.model.GroupChat;
 import com.pingme.group.service.GroupChatService;
 import com.pingme.user.model.User;
 import com.pingme.user.service.UserService;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @RestController
 public class GroupChatController {
@@ -23,32 +26,60 @@ public class GroupChatController {
 	@Autowired
 	private UserService userService;
 
-	@PostMapping("/group/{userid}")
-	public GroupChat createGroup(@RequestBody GroupChat groupChat, @PathVariable Integer userid) throws Exception {
+	@PostMapping("/api/newgroup")
+	public GroupChat createGroup(@RequestBody GroupChat groupChat, @RequestHeader("Authorization") String jwt)
+			throws Exception {
 
-		User user = userService.findUserByid(userid);
+		User user = userService.findUserfromJwt(jwt);
 
 		GroupChat groupChat2 = groupChatService.createGroupUser(groupChat, user);
 
 		return groupChat2;
 	}
 
-	@PostMapping("/useraddgroup/{userid}/{groupid}")
-	public GroupChat userGropList(@PathVariable Integer userid, @PathVariable Integer groupid) throws Exception {
-		User user = userService.findUserByid(userid);
+	@PostMapping("/api/useraddgroup")
+	public GroupChat userAddinGroup(@RequestBody GroupRequest groupRequest) throws Exception {
+		User useradd = userService.findUserByid(groupRequest.getUserid());
 
-		GroupChat gc = groupChatService.findByGroupId(groupid);
+		GroupChat gc = groupChatService.findByGroupId(groupRequest.getGroupid());
 
-		GroupChat gc1 = groupChatService.addUserinGroup(user, gc);
+		GroupChat gc1 = groupChatService.addUserinGroup(gc, useradd);
 		return gc1;
 	}
-	
-	@GetMapping("/getgroup")
-	public List<GroupChat> getGroup(@RequestBody GroupChat groupChat) {
-		
-		List<GroupChat> gc = groupChatService.findByGroupChatName(groupChat);
-		
-		return gc;
+
+	@GetMapping("/api/getgroupbyuser")
+	public List<GroupChat> getGroups(@RequestHeader("Authorization") String token) {
+
+		User user = userService.findUserfromJwt(token);
+
+		List<GroupChat> lg = groupChatService.getAllGroupByUser(user);
+
+		return lg;
 	}
+
+	@GetMapping("/api/getAllgroups")
+	public List<GroupChat> getAllgroups() {
+		List<GroupChat> lg = groupChatService.getAllgroups();
+		return lg;
+	}
+
+	@GetMapping("/api/getgroups")
+	public List<GroupChat> getGroupList(@RequestParam String query) {
+
+		List<GroupChat> gpList = groupChatService.findByGroupChatName(query);
+
+		return gpList;
+	}
+	
+	@GetMapping("/api/group/{groupName}")
+	public GroupChat getGroup(@PathVariable String groupName) throws Exception {
+
+		GroupChat gpList = groupChatService.searchByGroupName(groupName);
+
+		return gpList;
+	}
+	
+	
+	
 
 }

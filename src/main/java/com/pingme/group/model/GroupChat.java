@@ -37,11 +37,11 @@ public class GroupChat {
 	@ManyToMany
 	private List<User> users = new ArrayList<>();
 
-	@JsonIgnore
+	
 	@OneToMany(mappedBy = "groupChat")
 	private List<Message> messages = new ArrayList<>();
 	
-	@JsonIgnore
+	
 	@OneToMany(mappedBy = "groupChatfile")
 	private List<FileContent> file = new ArrayList<>();
 	

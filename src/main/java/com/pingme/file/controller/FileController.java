@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
@@ -19,17 +20,10 @@ public class FileController {
 	@Autowired
 	private FileService fileService;
 
-	@PostMapping("/fileupload/{chatid}")
-	public String uploadFile(@RequestParam("file") MultipartFile file, @PathVariable Integer chatid) throws Exception {
-		System.out.println("I am here...");
-		List<FileContent> fc = fileService.sendFileUser(file, chatid);
+	@PostMapping("/api/fileupload/{fileContent}")
+	public String uploadFile(@RequestParam("file") MultipartFile file,@PathVariable String  fileContent) throws Exception {
 
-		return "file upload";
-	}
-
-	@PostMapping("/test")
-	public String uploadFile() throws Exception {
-		System.out.println("I am here...");
+		List<FileContent> fc = fileService.sendFileUser(file, fileContent);
 
 		return "file upload";
 	}
@@ -42,11 +36,11 @@ public class FileController {
 		return fc;
 	}
 
-	@PostMapping("/fileuploadtoGroup/{groupid}")
-	public FileContent uploadFiletoGroup(@RequestParam("file") MultipartFile file, @PathVariable Integer groupid)
+	@PostMapping("/fileuploadtoGroup/{groupname}")
+	public FileContent uploadFiletoGroup(@RequestParam("file") MultipartFile file, @PathVariable String groupname)
 			throws Exception {
 
-		FileContent fc = fileService.sendFilestoGroup(file, groupid);
+		FileContent fc = fileService.sendFilestoGroup(file, groupname);
 
 		return fc;
 	}

@@ -11,4 +11,9 @@ import lombok.NoArgsConstructor;
 public class ChatRequest {
 
 	private Integer userid;
+	private String firstName;
+	private String lastName;
+	private String contact;
+	private String senderFirstName;
+	private String reqFirstName;
 }

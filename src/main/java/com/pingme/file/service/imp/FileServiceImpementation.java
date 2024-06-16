@@ -37,12 +37,11 @@ public class FileServiceImpementation implements FileService {
 	private ChatService chatService;
 
 	@Override
-	public List<FileContent> sendFileUser(MultipartFile file, Integer chatid) throws Exception {
+	public List<FileContent> sendFileUser(MultipartFile file, String filename) throws Exception {
 
 		List<FileContent> addfile = new ArrayList<>();
-		// Optional<Chat> chat = chatRepository.findById(chatid);
 
-		Chat chat = chatService.findByid(chatid);
+		Chat chat = chatService.findBychatname(filename);
 
 		FileContent fileContent = new FileContent(null, file.getOriginalFilename(), file.getContentType(),
 				file.getSize(), chat, null);
@@ -64,11 +63,11 @@ public class FileServiceImpementation implements FileService {
 	}
 
 	@Override
-	public FileContent sendFilestoGroup(MultipartFile file, Integer groupid) throws Exception {
+	public FileContent sendFilestoGroup(MultipartFile file, String groupname) throws Exception {
 
 		List<FileContent> addfile = new ArrayList<>();
 
-		GroupChat groupChat = groupChatService.findByGroupId(groupid);
+		GroupChat groupChat = groupChatService.findByGroupName(groupname);
 
 		FileContent fileContent = new FileContent(null, file.getOriginalFilename(), file.getContentType(),
 				file.getSize(), null, groupChat);
