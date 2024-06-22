@@ -37,7 +37,7 @@ public class Message {
 	private String textMessage;
 	private String video;
     private String image;
-	private LocalDateTime timeStamp;
+	private String timeStamp;
 	private Integer chatid;
 	private Integer groupid;
 	private String senderUser;

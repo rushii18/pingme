@@ -1,6 +1,7 @@
 package com.pingme.message.service.imp;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -37,7 +38,9 @@ public class MessageServiceImpementation implements MessageService {
 
 	@Autowired
 	private GroupChatRepository groupChatRepository;
-
+	
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm /dd-MM-yyyy");
+	
 	@Override
 	public Message senMessage(Chat chat, Message message, User user, MultipartFile filContent) {
 
@@ -57,7 +60,7 @@ public class MessageServiceImpementation implements MessageService {
 		message1.setChatid(message.getChatid());
 
 		message1.setVideo(message.getVideo());
-		message1.setTimeStamp(LocalDateTime.now());
+		message1.setTimeStamp(LocalDateTime.now().format(formatter));
 
 		chat1.get().getMessage().add(message1);
 
@@ -81,7 +84,7 @@ public class MessageServiceImpementation implements MessageService {
 		message1.setUser(user);
 		message1.setSenderUser(user.getFirstName());
 
-		message1.setTimeStamp(LocalDateTime.now());
+		message1.setTimeStamp(LocalDateTime.now().format(formatter));
 
 		gc.get().getMessages().add(message1);
 
@@ -101,7 +104,7 @@ public class MessageServiceImpementation implements MessageService {
 		// message1.setFile(message.getFile());
 		message1.setGroupChat(groupChat2.get());
 
-		message1.setTimeStamp(LocalDateTime.now());
+		message1.setTimeStamp(LocalDateTime.now().format(formatter));
 
 		groupChat2.get().getMessages().add(message1);
 

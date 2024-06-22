@@ -50,7 +50,7 @@ public class UserServiceImplemetation implements UserService {
 		User saveUser = userRepository.save(createUser);
 		String token = jwtService.generateToken(saveUser);
 
-		Authreponce auth = new Authreponce("Account Create", token);
+		Authreponce auth = new Authreponce("Account Create", token , createUser);
 
 		return auth;
 	}
@@ -87,6 +87,7 @@ public class UserServiceImplemetation implements UserService {
 	public Authreponce loginUser(String email, String password) throws Exception {
 
 		UserDetails userDetails = userDetailsService.loadUserByUsername(email);
+		Optional<User> user = userRepository.findByEmail(email);
 
 		if (email == userDetails.getUsername()) {
 
@@ -100,7 +101,7 @@ public class UserServiceImplemetation implements UserService {
 
 		String token = jwtService.generateToken(userDetails);
 
-		Authreponce auth = new Authreponce("login Success", token);
+		Authreponce auth = new Authreponce("login Success", token , user.get());
 		return auth;
 
 	}

@@ -1,5 +1,7 @@
 package com.pingme.group.model;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -33,6 +35,7 @@ public class GroupChat {
 	private Integer id;
 	private String groupImage;
 	private String groupName;
+	private LocalDate timeStamp;
 
 	@ManyToMany
 	private List<User> users = new ArrayList<>();

@@ -1,5 +1,8 @@
 package com.pingme.group.service.imp;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -27,6 +30,7 @@ public class GroupServiceImplementation implements GroupChatService {
 	@Autowired
 	private UserService userService;
 
+	
 	@Override
 	public GroupChat createGroupUser(GroupChat groupChat, User usersAdd) throws Exception {
 
@@ -41,6 +45,7 @@ public class GroupServiceImplementation implements GroupChatService {
 			groupChatCreate.setGroupName(groupChat.getGroupName());
 			groupChatCreate.setGroupImage(groupChat.getGroupImage());
 			groupChatCreate.getUsers().add(usersAdd);
+			groupChatCreate.setTimeStamp(LocalDate.now());
 
 			return groupChatCreate = groupChatRepository.save(groupChatCreate);
 		}

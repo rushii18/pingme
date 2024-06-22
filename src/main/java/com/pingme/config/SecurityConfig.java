@@ -14,6 +14,7 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.AuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.security.web.authentication.www.BasicAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
@@ -40,6 +41,9 @@ public class SecurityConfig {
 		return http.build();
 	}
 
+	
+	
+
 	private CorsConfigurationSource configurationSource() {
 
 		return new CorsConfigurationSource() {
@@ -48,7 +52,7 @@ public class SecurityConfig {
 			public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
 
 				CorsConfiguration cfg = new CorsConfiguration();
-				cfg.setAllowedOrigins(Arrays.asList( "http://localhost:5173" , "http://localhost:3000" ,"https://g5cqh4sz-5173.inc1.devtunnels.ms/" ));
+				cfg.setAllowedOrigins(Arrays.asList( "http://localhost:5173" , "http://localhost:3000" ,"https://ping-with-rushi.vercel.app" ));
 				cfg.setAllowedMethods(Collections.singletonList("*"));
 				cfg.setAllowCredentials(true);
 				cfg.setAllowedHeaders(Collections.singletonList("*"));
@@ -57,6 +61,9 @@ public class SecurityConfig {
 				return cfg;	
 			}
 		};
+		
+		
+		
 	}
 
 }

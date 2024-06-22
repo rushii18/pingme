@@ -1,6 +1,7 @@
 package com.pingme.chat.service.imp;
 
 import java.time.LocalDate;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import java.util.Optional;
 
@@ -26,6 +27,8 @@ public class ChatServiceImplementation implements ChatService {
 
 	@Autowired
 	private FileRepository fileRepository;
+	
+	DateTimeFormatter formatter = DateTimeFormatter.ofPattern("HH:mm /dd-MM-yyyy");
 
 	@Override
 	public String deleteChat(Integer chatid) {
